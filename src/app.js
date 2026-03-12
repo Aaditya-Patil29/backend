@@ -33,6 +33,5 @@ app.patch('/notes/:index', (req, res) => {
 
 })
 
-\\ Delete a note
 
 module.exports = app;
