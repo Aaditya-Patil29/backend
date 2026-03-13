@@ -1,37 +1,45 @@
 const express = require('express');
+const notemodel = require('./models/note.model')
 
-
-
-const app = express()
+const app = express();
 app.use(express.json())
 
-const notes = []
+//notes
 
-app.post('/notes', (req, res) => {
-    notes.push(req.body)
+app.post("/notes", async (req, res) => {
+
+    const data = req.body
+    await notemodel.create({
+        title: data.title,
+        description: data.description
+    })
+
     res.status(201).json({
-        message: 'Note created successfully'
+        message: "Note created successfully"
     })
 })
 
-app.get('/notes', (req, res) => {
+app.get("/notes", async (req, res) => {
+
+    const notes = await notemodel.find({
+
+        title: "test_title"
+    })
     res.status(200).json({
-        message: 'Notes fetched successfully',
+        message: "Notes fetched successfully",
         notes: notes
     })
-}) 
 
-app.patch('/notes/:index', (req, res) => {
-    const index = req.params.index
-    const description = req.body.description
+});
 
-    notes[index].description = description
+app.patch("/notes/:id", async (req, res) => {
+    const id = req.params.id
+    const desccription = req.body.description
+    await notemodel.findOneAndUpdate({ _id: id }, { description: desccription })
 
     res.status(200).json({
-        message: 'Note updated successfully'
+        message: "Note updated successfully"
     })
-
 })
 
-
-module.exports = app;
+module.exports = app
